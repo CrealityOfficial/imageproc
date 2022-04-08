@@ -7,7 +7,7 @@ if(NOT WIN32)
 	add_definitions(-DHAVE_PTHREADS)
 endif()
 
-set(LIBS )
+set(LIBS potrace)
 
 if(TARGET  OpenMP::OpenMP_CXX)
 	message(STATUS "build imageproc use openmp")
