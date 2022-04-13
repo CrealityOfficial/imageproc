@@ -187,9 +187,9 @@ public:
 			y = 0.;
 		}
 
-		PointF(float r, float c) {
-			x = c;
-			y = r;
+		PointF(float x_, float y_) {
+			x = x_;
+			y = y_;
 		}
 
 		bool samePoint(PointF p) {

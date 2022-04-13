@@ -997,19 +997,11 @@ potrace_bitmap_t* bitmapFromImage(const IMG2DLib::Mat& image,
 	potrace_bitmap_t* bitmap = bm_new(image.imageW, image.imageH);
 	int datalengh = image.imageW * image.imageH * image.channels;
 	int pi = 0;
-	for (int i = 0; i < datalengh; i += 4)
+	for (int i = 1; i < datalengh; i += 4)
 	{
 		int x = pi % image.imageW;
 		int y = pi / image.imageW;
-		int p;
-		if (image.channels == 4)
-		{
-			p = (image.imgdata[i + 3] > threshold) ? 1 : 0;
-		}
-		else
-		{
-			p = (image.imgdata[i] > threshold) ? 0 : 1;
-		}
+		int p = (image.imgdata[i] > threshold) ? 0 : 1;
 		BM_PUT(bitmap, x, y, p);
 
 		++pi;
