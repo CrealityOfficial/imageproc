@@ -264,7 +264,7 @@ void FreeImageErrorHandler(FREE_IMAGE_FORMAT fif, const char* message) {
 #endif
 	}
 
-	void writeImage_freeImage(unsigned char* data, int width, int height, const std::string& fileName)
+	void writeImage_freeImage(unsigned char* data, int width, int height, const std::string& fileName, ImageDataFormat format)
 	{
 #if HAVE_FREEIMAGE
 		FREE_IMAGE_FORMAT fif = FIF_UNKNOWN;
@@ -278,8 +278,29 @@ void FreeImageErrorHandler(FREE_IMAGE_FORMAT fif, const char* message) {
 			fif = FreeImage_GetFIFFromFilename(fileName.c_str());
 		}
 		// check that the plugin has reading capabilities ...
-		if ((fif != FIF_UNKNOWN) && FreeImage_FIFSupportsWriting(fif)) {
-			FIBITMAP* dib = FreeImage_ConvertFromRawBits(data, width / 4, height, width, 32, 0, 0, 0);;
+		if ((fif != FIF_UNKNOWN) && FreeImage_FIFSupportsWriting(fif)) 
+		{
+			FIBITMAP* dib = nullptr;
+			switch (format)
+			{
+			case imgproc::FORMAT_GRAY_8:
+				dib = FreeImage_ConvertFromRawBits(data, width, height, width, 8, 0, 0, 0);
+				break;
+			case imgproc::FORMAT_RGBA_4444:
+				dib = FreeImage_ConvertFromRawBits(data, width / 2, height, width, 16, 0, 0, 0);
+				break;
+			case imgproc::FORMAT_RGBA_8888:
+				dib = FreeImage_ConvertFromRawBits(data, width / 4, height, width, 32, 0, 0, 0);
+				break;
+			case imgproc::FORMAT_RGB_565:
+				dib = FreeImage_ConvertFromRawBits(data, width / 2, height, width, 16, 0, 0, 0);
+				break;
+			default:
+				break;
+			}
+			if (dib == nullptr)
+				return;
+
 			FreeImage_Save(fif, dib, fileName.c_str(), 0);
 			FreeImage_Unload(dib);
 		}
@@ -307,8 +328,28 @@ void FreeImageErrorHandler(FREE_IMAGE_FORMAT fif, const char* message) {
 		}
 
 		FIMEMORY* fmem = FreeImage_OpenMemory();
-		// RGBA8888
-		FIBITMAP* dib = FreeImage_ConvertFromRawBits(data.data, data.width / 4, data.height, data.width, 32, 0, 0, 0);
+		FIBITMAP* dib = nullptr;
+		switch (data.format)
+		{
+		case imgproc::FORMAT_GRAY_8:
+			dib = FreeImage_ConvertFromRawBits(data.data, data.width, data.height, data.width, 8, 0, 0, 0);
+			break;
+		case imgproc::FORMAT_RGBA_4444:
+			dib = FreeImage_ConvertFromRawBits(data.data, data.width / 2, data.height, data.width, 16, 0, 0, 0);
+			break;
+		case imgproc::FORMAT_RGBA_8888:
+			dib = FreeImage_ConvertFromRawBits(data.data, data.width / 4, data.height, data.width, 32, 0, 0, 0);
+			break;
+		case imgproc::FORMAT_RGB_565:
+			dib = FreeImage_ConvertFromRawBits(data.data, data.width / 2, data.height, data.width, 16, 0, 0, 0);
+			break;
+		default:
+			break;
+		}
+
+		if (dib == nullptr)
+			return;
+
 		FreeImage_SaveToMemory(fif, dib, fmem, 0);
 
 		long memSize = FreeImage_TellMemory(fmem);

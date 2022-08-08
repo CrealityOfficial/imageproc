@@ -88,7 +88,7 @@ namespace imgproc
 	void loadImage_freeImage(ImageData& data, const std::string& fileName);
 	void loadImage_freeImage(ImageData& data, const std::string& extension, int fd);
 	void loadImageFromMem_freeImage(unsigned char* source, unsigned sourceSize, ImageData& data, bool bgrFlag = false);
-	void writeImage_freeImage(unsigned char* data, int width, int height, const std::string& fileName);  //rgba
+	void writeImage_freeImage(unsigned char* data, int width, int height, const std::string& fileName, ImageDataFormat format = ImageDataFormat::FORMAT_RGBA_8888);  //rgba
 	void writeImage2Mem_freeImage(ImageData& data, unsigned char*& target, unsigned& targetSize, ImageFormat targetFormat);
 	ImageData* constructNewFreeImage(std::vector<ImageData*> data, ImageDataFormat format, std::vector<std::pair<ImageData::point, ImageData::point>>& offset);
 	ImageData* scaleFreeImage(ImageData* imagedata, float scaleX, float scaleY);
