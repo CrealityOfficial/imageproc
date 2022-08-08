@@ -5,6 +5,9 @@
 #include "trimesh2/XForm.h"
 
 #include <functional>
+#if __APPLE__
+#include <sys/stat.h>
+#endif
 
 namespace imgproc
 {
