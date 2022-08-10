@@ -248,7 +248,8 @@ void FreeImageErrorHandler(FREE_IMAGE_FORMAT fif, const char* message) {
 	{
 #if HAVE_FREEIMAGE
 		FIMEMORY* fmem = FreeImage_OpenMemory(source, sourceSize);
-		FREE_IMAGE_FORMAT fif = FreeImage_GetFileTypeFromMemory(fmem, 0);
+		FREE_IMAGE_FORMAT fif = FREE_IMAGE_FORMAT::FIF_UNKNOWN;
+		fif = FreeImage_GetFileTypeFromMemory(fmem, 0);
 		FIBITMAP* dib = FreeImage_LoadFromMemory(fif, fmem, 0);
 
 		if (dib != NULL) {

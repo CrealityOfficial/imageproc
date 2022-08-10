@@ -3,6 +3,7 @@
 #include "imageproc/optimizeenchaser.h"
 #include "trimesh2/Vec.h"
 #include "trimesh2/XForm.h"
+#include "sys/stat.h"
 
 #include <functional>
 #if __APPLE__
