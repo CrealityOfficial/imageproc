@@ -365,6 +365,28 @@ void FreeImageErrorHandler(FREE_IMAGE_FORMAT fif, const char* message) {
 #endif
 	}
 
+	void getImageSizeFromMem_freeImage(unsigned char* source, unsigned sourceSize, unsigned& width, unsigned& height)
+	{
+#if HAVE_FREEIMAGE
+		FIMEMORY* fmem = FreeImage_OpenMemory(source, sourceSize);
+		FREE_IMAGE_FORMAT fif = FreeImage_GetFileTypeFromMemory(fmem, 0);
+		FIBITMAP* dib = FreeImage_LoadFromMemory(fif, fmem, 0);
+
+		if (dib != NULL)
+		{
+			width = FreeImage_GetWidth(dib);
+			height = FreeImage_GetWidth(dib);
+		}
+		else
+		{
+			width = -1;
+			height = -1;
+		}
+
+		FreeImage_CloseMemory(fmem);
+#endif
+	}
+
 	ImageData* constructNewFreeImage(std::vector<ImageData*> imagedata, ImageDataFormat format, std::vector<std::pair<ImageData::point, ImageData::point>> &offset)
 	{
 		imgproc::ImageData* dataret = nullptr;
