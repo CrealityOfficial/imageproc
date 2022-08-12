@@ -9,6 +9,7 @@
 #include <queue>
 #include<memory>
 #include<stdio.h>
+#include<algorithm>
 
 #define BM_WORDSIZE ((int)sizeof(potrace_word))
 #define BM_WORDBITS (8*BM_WORDSIZE)
