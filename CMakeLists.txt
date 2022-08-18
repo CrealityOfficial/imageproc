@@ -1,3 +1,6 @@
+__cc_find(Trimesh2)
+__cc_find(Potrace)
+
 set(SRCS imageproc.cpp
 		 include/imageproc/imageproc.h
 		 imageloader.cpp
