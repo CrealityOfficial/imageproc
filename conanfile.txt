@@ -1,5 +1,6 @@
 [requires]
 freeimage/0.0.2
 potrace/0.0.2
+trimesh2/0.0.3
 
 
