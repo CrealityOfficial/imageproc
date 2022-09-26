@@ -362,6 +362,8 @@ void FreeImageErrorHandler(FREE_IMAGE_FORMAT fif, const char* message) {
 		FreeImage_ReadMemory(target, sizeof(unsigned char), memSize, fmem);
 
 		FreeImage_CloseMemory(fmem);
+		FreeImage_Unload(dib);
+
 #endif
 	}
 
