@@ -88,7 +88,7 @@ namespace imgproc
 			{
 				release();
 				data = new unsigned char[w * h];
-				memset(data, 0, width * height);
+				memset(data, 0, w * h);
 			}
 			width = w;
 			height = h;
@@ -174,6 +174,81 @@ namespace imgproc
 			memcpy(cd, cs, src.width);
 		}
 	}
+
+	void ImageData::rotate(double radians, int channels, bool releaseFlag)
+	{
+		typedef std::pair<float, float> vec2f;
+		std::function<vec2f(vec2f, float)> rotateFunc = [](vec2f origin, float rotRadians)->vec2f
+		{
+			return vec2f(origin.first * cosf(rotRadians) - origin.second * sinf(rotRadians), origin.first * sinf(rotRadians) + origin.second * cosf(rotRadians));
+		};
+
+		// 以纹理坐标(0.5, 0.5)为原点，建立平面坐标系
+		double halfWidth = width / 2.0;
+		double halfHeight = height / 2.0;
+		std::vector<vec2f> edgePos = {vec2f(-halfWidth , halfHeight), vec2f(halfWidth, halfHeight), vec2f(-halfWidth, -halfHeight), vec2f(halfWidth, -halfHeight)};
+		float maxX = -FLT_MAX, minX = FLT_MAX, maxY = -FLT_MAX, minY = FLT_MAX;
+		for (int i = 0; i < edgePos.size(); i++)
+		{
+			vec2f newPos = rotateFunc(edgePos[i], radians);
+			if (newPos.first < minX)
+				minX = newPos.first;
+			if (newPos.first > maxX)
+				maxX = newPos.first;
+
+			if (newPos.second < minY)
+				minY = newPos.second;
+			if (newPos.second > maxY)
+				maxY = newPos.second;
+		}
+
+		//maxX *= 2;
+		//minX *= 2;
+		//maxY *= 2;
+		//minY *= 2;
+		float centerX = (maxX - minX) / 2.0;
+		float centerY = (maxY - minY) / 2.0;
+		int newWidth = maxX - minX;
+		int newHeight = maxY - minY;
+		unsigned char* newData = new unsigned char[newWidth * newHeight * channels];
+		memset(newData, 0, newWidth * newHeight * channels);
+
+		imgproc::Texture texRaw(width, height, data);
+		for (int i = 0; i < newWidth; ++i)
+		{
+			for (int j = 0; j < newHeight; ++j)
+			{
+				vec2f originPos = rotateFunc(vec2f(i - centerX, centerY - j), -radians);
+				float x = (originPos.first + halfWidth) / width;
+				float y = (halfHeight - originPos.second) / height;
+
+				int indexNew = j * newWidth * channels + i * channels;
+				unsigned char gray = 0;
+
+				if (x >= 0 && x < 1.0 && y >= 0 && y < 1.0)
+				{
+					unsigned char _gray = 0;
+					if (texRaw.texcoordGet(x, y, _gray))
+						gray = _gray;
+				}
+
+				for (int k = 0; k < channels; k++)
+				{
+					newData[indexNew] = gray;
+					indexNew++;
+				}
+			}
+		}
+
+		if (releaseFlag)
+			release();
+
+		data = newData;
+		width = newWidth;
+		height = newHeight;
+		rotRadians = radians;
+	}
+
 	void ImageData::clone(int w, int h, unsigned char* srcdata)
 	{
 		allocate(w, h);
