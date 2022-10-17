@@ -998,7 +998,7 @@ potrace_bitmap_t* bitmapFromImage(const IMG2DLib::Mat& image,
 	potrace_bitmap_t* bitmap = bm_new(image.imageW, image.imageH);
 	int datalengh = image.imageW * image.imageH * image.channels;
 	int pi = 0;
-	for (int i = 1; i < datalengh; i += 4)
+	for (int i = 1; i < datalengh; i += image.channels)
 	{
 		int x = pi % image.imageW;
 		int y = pi / image.imageW;
