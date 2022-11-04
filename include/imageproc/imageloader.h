@@ -95,6 +95,10 @@ namespace imgproc
 	void getImageSizeFromMem_freeImage(unsigned char* source, unsigned sourceSize, unsigned& width, unsigned& height);
 	ImageData* constructNewFreeImage(std::vector<ImageData*> data, ImageDataFormat format, std::vector<std::pair<ImageData::point, ImageData::point>>& offset);
 	ImageData* scaleFreeImage(ImageData* imagedata, float scaleX, float scaleY);
+
+	// encode the width and the height of texture to an Integer
+	int encodeWH(int width, int height, int posOffset = 100000000);
+	void decodeWH(int& width, int& height, int code, int posOffset = 100000000);
 }
 
 #endif // IMGPROC_IMAGELOADER_1608004787715_H

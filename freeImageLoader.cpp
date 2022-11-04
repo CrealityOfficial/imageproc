@@ -550,6 +550,16 @@ void FreeImageErrorHandler(FREE_IMAGE_FORMAT fif, const char* message) {
 		FreeImage_Unload(newdib);
 		#endif
 		return dataret;
+	}
 
+	int imgproc::encodeWH(int width, int height, int posOffset)
+	{
+		return width * posOffset + height;
+	}
+
+	void imgproc::decodeWH(int& width, int& height, int code, int posOffset)
+	{
+		width = code / posOffset;
+		height = code % posOffset;
 	}
 }
