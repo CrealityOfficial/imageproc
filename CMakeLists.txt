@@ -16,10 +16,10 @@ set(LIBS potrace trimesh2)
 
 __cc_find(freeImage)
 
-if(TARGET freeimage)
-	message(STATUS "build mmesh use freeImage ...........................")
+if(TARGET freeImage)
+	message(STATUS "build imageproc use freeImage ...........................")
 	add_definitions(-DHAVE_FREEIMAGE)
-	list(APPEND LIBS freeimage)
+	list(APPEND LIBS freeImage)
 endif()
 
 if(TARGET  OpenMP::OpenMP_CXX)
