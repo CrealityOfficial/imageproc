@@ -176,7 +176,7 @@ namespace imgproc
 		}
 	}
 
-	void ImageData::rotate(double radians, int channels, bool releaseFlag)
+	void ImageData::rotate(double radians, int channels, bool releaseFlag, int maxWidth, int maxHeight)
 	{
 		typedef std::pair<float, float> vec2f;
 		std::function<vec2f(vec2f, float)> rotateFunc = [](vec2f origin, float rotRadians)->vec2f
@@ -203,23 +203,25 @@ namespace imgproc
 				maxY = newPos.second;
 		}
 
-		//maxX *= 2;
-		//minX *= 2;
-		//maxY *= 2;
-		//minY *= 2;
 		float centerX = (maxX - minX) / 2.0;
 		float centerY = (maxY - minY) / 2.0;
-		int newWidth = maxX - minX;
-		int newHeight = maxY - minY;
+		int rotateWidth = maxX - minX;
+		int newWidth = (maxWidth > 0 && rotateWidth > maxWidth) ? maxWidth : rotateWidth;
+		int rotateHeight = maxY - minY;
+		int newHeight = (maxHeight > 0 && rotateHeight > maxHeight) ? maxHeight : rotateHeight;
 		unsigned char* newData = new unsigned char[newWidth * newHeight * channels];
 		memset(newData, 0, newWidth * newHeight * channels);
 
+		float iOffset = (rotateWidth - newWidth) / 2.0;
+		float jOffset = (rotateHeight - newHeight) / 2.0;
 		imgproc::Texture texRaw(width, height, data);
 		for (int i = 0; i < newWidth; ++i)
 		{
 			for (int j = 0; j < newHeight; ++j)
 			{
-				vec2f originPos = rotateFunc(vec2f(i - centerX, centerY - j), -radians);
+				float realI = i + iOffset;
+				float realJ = j + jOffset;
+				vec2f originPos = rotateFunc(vec2f(realI - centerX, centerY - realJ), -radians);
 				float x = (originPos.first + halfWidth) / width;
 				float y = (halfHeight - originPos.second) / height;
 

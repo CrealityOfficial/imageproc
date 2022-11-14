@@ -44,7 +44,7 @@ namespace imgproc
 		void gradient(unsigned char start, unsigned char end);
 		bool valid();
 		void fromFlipY(const ImageData& src);
-		void rotate(double rotRadians, int channels = 1, bool releaseFlag = true);
+		void rotate(double rotRadians, int channels = 1, bool releaseFlag = true, int maxWidth = -1, int maxHeight = -1);
 		void clone( int w, int h, unsigned char* data);
 		inline void blend(int x, int y, unsigned char value, unsigned char alpha)
 		{
