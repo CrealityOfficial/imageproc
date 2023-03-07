@@ -23,6 +23,7 @@ if(TARGET freeimage)
 	message(STATUS "build mmesh use freeImage ...........................")
 	add_definitions(-DHAVE_FREEIMAGE)
 	list(APPEND LIBS freeimage)
+
 endif()
 
 if(TARGET  OpenMP::OpenMP_CXX)
@@ -30,8 +31,14 @@ if(TARGET  OpenMP::OpenMP_CXX)
 	list(APPEND LIBS OpenMP::OpenMP_CXX)
 endif()
 
+set(DEFS)
+if(CC_GLOBAL_FORCE_STATIC)
+	list(APPEND DEFS FREEIMAGE_LIB)
+endif()
+
 __add_real_target(imageproc lib SOURCE ${SRCS}
                             LIB ${LIBS}
+							DEF ${DEFS}
                             INC ${CMAKE_CURRENT_SOURCE_DIR}/include
                             INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
