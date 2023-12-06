@@ -17,12 +17,12 @@ endif()
 
 set(LIBS potrace trimesh2)
 
-__cc_find(freeImage)
+__cc_find(freeimage_static)
 
-if(TARGET freeimage)
+if(TARGET freeimage_static)
 	message(STATUS "build mmesh use freeImage ...........................")
 	add_definitions(-DHAVE_FREEIMAGE)
-	list(APPEND LIBS freeimage)
+	list(APPEND LIBS freeimage_static)
 
 endif()
 
